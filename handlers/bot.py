@@ -4,9 +4,6 @@ from telegram.ext import ContextTypes
 
 from services.currencies import get_today_currency, get_today_metals
 
-# TODO: Сегодня считается только на момент запуска программы
-TODAY = datetime.today().strftime("%Y-%m-%d")  
-
 URL = "https://www.cbr-xml-daily.ru/daily_json.js"
 
 
@@ -25,7 +22,7 @@ async def get(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     today_pretty = datetime.today().strftime("%d.%m.%Y")
     currency = get_today_currency(URL)
-    metals = get_today_metals(TODAY)
+    metals = get_today_metals()
 
     text = f"📊 *Курсы на {today_pretty}*\n\n"
 
