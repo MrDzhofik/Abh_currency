@@ -1,5 +1,6 @@
 import requests
 import cbrapi as cbr
+from datetime import datetime
 
 
 # Получение курсов валют на сегодняшний день
@@ -20,7 +21,7 @@ def get_today_currency(url: str) -> dict[str, float]:
 # Получение курсов металлов на дату в виде словаря
 # date - current date
 # return - dictionary
-def get_today_metals(date: str) -> dict[str, float]:
+def get_today_metals(date: str = datetime.today().strftime("%Y-%m-%d")) -> dict[str, float]:
     metals = cbr.get_metals_prices(date)
 
     result = {}
