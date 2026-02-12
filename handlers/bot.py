@@ -21,8 +21,9 @@ async def get(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     )
 
     today_pretty = datetime.today().strftime("%d.%m.%Y")
+    today = datetime.today().strftime("%Y-%m-%d")
     currency = get_today_currency(URL)
-    metals = get_today_metals()
+    metals = get_today_metals(today)
 
     text = f"📊 *Курсы на {today_pretty}*\n\n"
 

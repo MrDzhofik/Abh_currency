@@ -21,7 +21,8 @@ def get_today_currency(url: str) -> dict[str, float]:
 # Получение курсов металлов на дату в виде словаря
 # date - current date
 # return - dictionary
-def get_today_metals(date: str = datetime.today().strftime("%Y-%m-%d")) -> dict[str, float]:
+def get_today_metals(date: str) -> dict[str, float]:
+    print(date)
     metals = cbr.get_metals_prices(date)
 
     result = {}
