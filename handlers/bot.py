@@ -31,9 +31,12 @@ async def get(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     for name, value in currency.items():
         text += f"• {name}: {value}\n"
 
-    text += "\n🪙 *Драгоценные металлы:*\n"
-    for name, value in metals.items():
-        text += f"• {name}: {value}\n"
+    if metals.get("Ошибка"):
+        text += f"\n{metals['Ошибка']}"
+    else:
+        text += "\n🪙 *Драгоценные металлы:*\n"
+        for name, value in metals.items():
+            text += f"• {name}: {value}\n"
 
     await wait_msg.edit_text(
         text,

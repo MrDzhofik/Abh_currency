@@ -11,9 +11,9 @@ def get_today_currency(url: str) -> dict[str, float]:
     body = request.json()["Valute"]
 
     result = {}
-    result[body['USD']['Name']] = body['USD']['Value']
-    result[body['EUR']['Name']] = body['EUR']['Value']
-    result[body['GBP']['Name']] = body['GBP']['Value']
+    result[body['USD']['Name']] = round(body['USD']['Value'], 2)
+    result[body['EUR']['Name']] = round(body['EUR']['Value'], 2)
+    result[body['GBP']['Name']] = round(body['GBP']['Value'], 2)
 
     return result
 
@@ -21,14 +21,18 @@ def get_today_currency(url: str) -> dict[str, float]:
 # Получение курсов металлов на дату в виде словаря
 # date - current date
 # return - dictionary
-def get_today_metals(date: str) -> dict[str, float]:
+def get_today_metals(date: str) -> dict:
     print(date)
     metals = cbr.get_metals_prices(date)
 
     result = {}
-    result['Золото'] = float(metals['GOLD'][date])
-    result['Серебро'] = float(metals['SILVER'][date])
-    result['Платина'] = float(metals['PLATINUM'][date])
-    result['Палладий'] = float(metals['PALLADIUM'][date])
+
+    try:
+        result['Золото'] = round(float(metals['GOLD'][date]), 2)
+        result['Серебро'] = round(float(metals['SILVER'][date]), 2)
+        result['Платина'] = round(float(metals['PLATINUM'][date]), 2)
+        result['Палладий'] = round(float(metals['PALLADIUM'][date]), 2)
+    except KeyError:
+        result['Ошибка'] = 'Не удалось получить курс металлов'
 
     return result
