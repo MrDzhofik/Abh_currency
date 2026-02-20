@@ -1,6 +1,5 @@
 import requests
 import cbrapi as cbr
-from datetime import datetime
 
 
 # Получение курсов валют на сегодняшний день
@@ -22,17 +21,16 @@ def get_today_currency(url: str) -> dict[str, float]:
 # date - current date
 # return - dictionary
 def get_today_metals(date: str) -> dict:
-    print(date)
     metals = cbr.get_metals_prices(date)
 
     result = {}
 
-    try:
+    if "GOLD" in metals:
         result['Золото'] = round(float(metals['GOLD'][date]), 2)
         result['Серебро'] = round(float(metals['SILVER'][date]), 2)
         result['Платина'] = round(float(metals['PLATINUM'][date]), 2)
         result['Палладий'] = round(float(metals['PALLADIUM'][date]), 2)
-    except KeyError:
-        result['Ошибка'] = 'Не удалось получить курс металлов'
+    else:
+        result['Ошибка'] = "Не удалось получить курс металлов"
 
     return result
