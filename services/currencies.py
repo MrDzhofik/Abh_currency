@@ -31,6 +31,9 @@ def get_today_metals(date: str) -> dict:
         result['Платина'] = round(float(metals['PLATINUM'][date]), 2)
         result['Палладий'] = round(float(metals['PALLADIUM'][date]), 2)
     else:
+        with open("logs.txt", "w+", encoding="utf-8") as f:
+            f.write(f"Danger! Error at {date}:  {metals}")
+
         result['Ошибка'] = "Не удалось получить курс металлов"
 
     return result
