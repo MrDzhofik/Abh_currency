@@ -1,10 +1,11 @@
-from datetime import datetime
 from telegram import Update
 from telegram.ext import ContextTypes
 
-from services.currencies import get_today_currency, get_today_metals
+from services.format import build_rates_message
 
 URL = "https://www.cbr-xml-daily.ru/daily_json.js"
+
+CHAT = "1110162579"
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -20,25 +21,20 @@ async def get(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         "Пожалуйста, подождите"
     )
 
-    today_pretty = datetime.today().strftime("%d.%m.%Y")
-    today = datetime.today().strftime("%Y-%m-%d")
-    currency = get_today_currency(URL)
-    metals = get_today_metals(today)
-
-    text = f"📊 *Курсы на {today_pretty}*\n\n"
-
-    text += "💱 *Валюты:*\n"
-    for name, value in currency.items():
-        text += f"• {name}: {value}\n"
-
-    if metals.get("Ошибка"):
-        text += f"\n{metals['Ошибка']}"
-    else:
-        text += "\n🪙 *Драгоценные металлы:*\n"
-        for name, value in metals.items():
-            text += f"• {name}: {value}\n"
+    text = build_rates_message()
 
     await wait_msg.edit_text(
         text,
+        parse_mode="Markdown"
+    )
+
+
+async def send_daily_rates(context: ContextTypes.DEFAULT_TYPE):
+
+    text = build_rates_message()
+
+    await context.bot.send_message(
+        chat_id=CHAT,
+        text=text,
         parse_mode="Markdown"
     )

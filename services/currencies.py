@@ -20,20 +20,20 @@ def get_today_currency(url: str) -> dict[str, float]:
 # Получение курсов металлов на дату в виде словаря
 # date - current date
 # return - dictionary
-def get_today_metals(date: str) -> dict:
-    metals = cbr.get_metals_prices(date)
+def get_today_metals(today: str, yesterday: str) -> dict:
+    metals = cbr.get_metals_prices(yesterday, today)
 
-    result = {}
+    if metals is None or metals.empty:
+        with open("logs.txt", "a", encoding="utf-8") as f:
+            f.write(f"Error at {today}: {metals}\n")
 
-    if "GOLD" in metals:
-        result['Золото'] = round(float(metals['GOLD'][date]), 2)
-        result['Серебро'] = round(float(metals['SILVER'][date]), 2)
-        result['Платина'] = round(float(metals['PLATINUM'][date]), 2)
-        result['Палладий'] = round(float(metals['PALLADIUM'][date]), 2)
-    else:
-        with open("logs.txt", "w+", encoding="utf-8") as f:
-            f.write(f"Danger! Error at {date}:  {metals}")
+        return {"Ошибка": "Не удалось получить курс металлов"}
 
-        result['Ошибка'] = "Не удалось получить курс металлов"
+    row = metals.iloc[-1]
 
-    return result
+    return {
+        "Золото": round(float(row["GOLD"]), 2),
+        "Серебро": round(float(row["SILVER"]), 2),
+        "Платина": round(float(row["PLATINUM"]), 2),
+        "Палладий": round(float(row["PALLADIUM"]), 2),
+    }
